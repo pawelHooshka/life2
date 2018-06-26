@@ -80,13 +80,13 @@ public class LifeTest {
     }
 
     private Object[] testCellsCenter() {
-        boolean[][] cells1 = new boolean[5][5];
-        boolean[][] cells2 = new boolean[5][5];
-        cells1[2][2] = true;
+        boolean[][] cellsCenterAlive = new boolean[5][5];
+        boolean[][] cellsCenterDead = new boolean[5][5];
+        cellsCenterAlive[2][2] = true;
 
         return new Object[] {
-                cells1,
-                cells2
+                cellsCenterAlive,
+                cellsCenterDead
         };
     }
 }
