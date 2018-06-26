@@ -32,7 +32,7 @@ public class LifeTest {
 
     @Test
     @Parameters(method = "testCellsCenter")
-    public void testGetLiveAdjacentsCountCenterCurrentAlive(boolean[][] cells) {
+    public void testGetLiveAdjacentsCountCenter(boolean[][] cells) {
         assertThat(Life.getLiveAdjacentsCount(cells, 2, 2, 5), is(0));
 
         cells[1][1] = true;
@@ -61,6 +61,33 @@ public class LifeTest {
     }
 
     @Test
+    @Parameters(method = "testCellsCorner")
+    public void testGetLiveAdjacentsCountCorner(boolean[][] cells) {
+        assertThat(Life.getLiveAdjacentsCount(cells, 0, 0, 5), is(0));
+
+        cells[0][1] = true;
+        assertThat(Life.getLiveAdjacentsCount(cells, 0, 0, 5), is(1));
+
+        cells[1][0] = true;
+        assertThat(Life.getLiveAdjacentsCount(cells, 0, 0, 5), is(2));
+
+        cells[1][1] = true;
+        assertThat(Life.getLiveAdjacentsCount(cells, 0, 0, 5), is(3));
+    }
+
+    @Test
+    @Parameters(method = "testCellsCornerAllOthersAlive")
+    public void testGetLiveAdjacentsCountCornerAllOthersAlive(boolean[][] cells) {
+        assertThat(Life.getLiveAdjacentsCount(cells, 0, 0, 5), is(3));
+    }
+
+    @Test
+    @Parameters(method = "testCellsCenterAllOthersAlive")
+    public void testGetLiveAdjacentsCountCenterAllOthersAlive(boolean[][] cells) {
+        assertThat(Life.getLiveAdjacentsCount(cells, 2, 2, 5), is(8));
+    }
+
+    @Test
     public void testBlinkerPattern() {
         boolean[][] cells = new boolean[5][5];
         cells[2][1] = true;
@@ -80,13 +107,52 @@ public class LifeTest {
     }
 
     private Object[] testCellsCenter() {
-        boolean[][] cellsCenterAlive = new boolean[5][5];
-        boolean[][] cellsCenterDead = new boolean[5][5];
-        cellsCenterAlive[2][2] = true;
+        return testAllDeadOneAliveAndAllDead(2, 2);
+    }
+
+    private Object[] testCellsCenterAllOthersAlive() {
+        return testCellsAllAliveAndAllAliveOneDead(2, 2);
+    }
+
+    private Object[] testCellsCorner() {
+        return testAllDeadOneAliveAndAllDead(0, 0);
+    }
+
+    private Object[] testCellsCornerAllOthersAlive() {
+        return testCellsAllAliveAndAllAliveOneDead(0, 0);
+    }
+
+    private Object[] testAllDeadOneAliveAndAllDead(int y, int x) {
+        boolean[][] cellsCornerAlive = new boolean[5][5];
+        boolean[][] cellsCornerDead = new boolean[5][5];
+        cellsCornerAlive[y][x] = true;
 
         return new Object[] {
-                cellsCenterAlive,
-                cellsCenterDead
+                cellsCornerAlive,
+                cellsCornerDead
         };
+    }
+
+    private Object[] testCellsAllAliveAndAllAliveOneDead(int y, int x) {
+        boolean[][] cellsSelectedAlive = new boolean[5][5];
+        boolean[][] cellsSelectedDead = new boolean[5][5];
+
+        populateTrue(cellsSelectedAlive);
+        populateTrue(cellsSelectedDead);
+
+        cellsSelectedDead[y][x] = false;
+
+        return new Object[] {
+                cellsSelectedAlive,
+                cellsSelectedDead
+        };
+    }
+
+    private void populateTrue(boolean[][] cells) {
+        for (int i = 0; i < cells.length; i++) {
+            for (int j = 0; j < cells[0].length; j++) {
+                cells[i][j] = true;
+            }
+        }
     }
 }
